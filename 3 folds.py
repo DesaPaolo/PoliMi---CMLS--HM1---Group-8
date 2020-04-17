@@ -65,19 +65,19 @@ y_test = np.array(y_test)
 # d2_x_train = x_train.reshape((nsamples_train,nx_train*ny_train))
 # d2_x_test = x_test.reshape((nsamples_test,nx_test*ny_test))
 
-# Normalize features
-feat_max = np.max(x_train, axis=0) #x_train/d2_x_train
-feat_min = np.min(x_train, axis=0) #x_train/d2_x_train
-x_train_normalized = (x_train - feat_min) / (feat_max - feat_min) #x_train/d2_x_train
-x_test_normalized = (x_test - feat_min) / (feat_max - feat_min) #x_test/d2_x_test
+# # Normalize features
+# feat_max = np.max(x_train, axis=0) #x_train/d2_x_train
+# feat_min = np.min(x_train, axis=0) #x_train/d2_x_train
+# x_train_normalized = (x_train - feat_min) / (feat_max - feat_min) #x_train/d2_x_train
+# x_test_normalized = (x_test - feat_min) / (feat_max - feat_min) #x_test/d2_x_test
 
 # Support Vector Machine Classifier
 clf = sklearn.svm.SVC(C=1, kernel='rbf')
-clf.fit(x_train_normalized, y_train) #x_train_normalized/x_train
-y_predict = clf.predict(x_test_normalized)#x_test_normalized/x_test
+clf.fit(x_train, y_train) #x_train_normalized/x_train
+y_predict = clf.predict(x_test)#x_test_normalized/x_test
 
 #Evaluation
-accuracy = clf.score(x_test_normalized, y_test)#x_test_normalized/x_test
+accuracy = clf.score(x_test, y_test)#x_test_normalized/x_test
 print("Accuracy:")
 print(accuracy)
 print(confusion_matrix(y_test, y_predict))
