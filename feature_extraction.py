@@ -67,6 +67,6 @@ y_test = np.array(y_test)
 # Load feature vectors in file .csv
 path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Feature coeff csv/"
 np.savetxt(path + '1-9folds_mfcc_n_coeff=20_x_train.csv', x_train, delimiter=',')
-np.savetxt(path + 'fold10_mfcc_20_coeff_x_test.csv', x_test, delimiter=',')
-np.savetxt(path + '1-9folds_mfcc_20_coeff_y_train.csv', y_train, delimiter=',')
-np.savetxt(path + 'fold10_mfcc_20_coeff_y_test.csv', y_test, delimiter=',')
+np.savetxt(path + 'fold10_mfcc_n_coeff=20_x_test.csv', x_test, delimiter=',')
+np.savetxt(path + '1-9folds_y_train.csv', y_train, delimiter=',')
+np.savetxt(path + 'fold10_y_test.csv', y_test, delimiter=',')

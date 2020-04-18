@@ -7,9 +7,9 @@ from sklearn.preprocessing import StandardScaler
 # Load feature vector
 path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Feature coeff csv/"
 x_train = np.genfromtxt(path + '1-9folds_mfcc_n_coeff=20_x_train.csv', delimiter=',')
-x_test = np.genfromtxt(path + 'fold10_mfcc_20_coeff_x_test.csv', delimiter=',')
-y_train = np.genfromtxt(path + '1-9folds_mfcc_20_coeff_y_train.csv', delimiter=',')
-y_test = np.genfromtxt(path + 'fold10_mfcc_20_coeff_y_test.csv', delimiter=',')
+x_test = np.genfromtxt(path + 'fold10_mfcc_n_coeff=20_x_test.csv', delimiter=',')
+y_train = np.genfromtxt(path + '1-9folds_y_train.csv', delimiter=',')
+y_test = np.genfromtxt(path + 'fold10_y_test.csv', delimiter=',')
 
 
 scaler = StandardScaler()
