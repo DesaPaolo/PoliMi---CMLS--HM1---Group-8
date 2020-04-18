@@ -1,15 +1,17 @@
-import pandas as pd
-import numpy as np
 import librosa
+import numpy as np
+import pandas as pd
 import sklearn
-from tqdm import tqdm
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import confusion_matrix
+from tqdm import tqdm
 
 # DATA HANDLING
-path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/"
+path = "/Users/PilvioSol/Desktop/UrbanSound8K"
 
 # Read metadata file
-data = pd.read_csv(path + "UrbanSound8K/metadata/UrbanSound8K.csv")
+data = pd.read_csv(path + "/metadata/UrbanSound8K.csv")
 
 #Reorganize data for the first 3 folds
 data_3folds = []
@@ -32,7 +34,7 @@ for i in tqdm(range(len(d3f))):
     fold_no = str(d3f.iloc[i]["fold"])
     file = d3f.iloc[i]["slice_file_name"]
     label = d3f.iloc[i]["classID"]
-    filename = path + "UrbanSound8K/audio/fold" + fold_no + "/" + file
+    filename = path + "/audio/fold" + fold_no + "/" + file
     y, sr = librosa.load(filename, mono=True)  # convert to mono
 
     # MEL Feature
@@ -72,12 +74,23 @@ y_test = np.array(y_test)
 # x_test_normalized = (x_test - feat_min) / (feat_max - feat_min) #x_test/d2_x_test
 
 # Support Vector Machine Classifier
-clf = sklearn.svm.SVC(C=1, kernel='rbf')
-clf.fit(x_train, y_train) #x_train_normalized/x_train
-y_predict = clf.predict(x_test)#x_test_normalized/x_test
+
+grid_params = {
+    'n_neighbors': [3, 5, 7, 9, 11, 15],
+    'weights': ['uniform', 'distance'],
+    'metric': ['euclidean', 'manhattan']
+}
+
+model = GridSearchCV(KNeighborsClassifier(), grid_params, cv=5, n_jobs=-1)
+model.fit(x_train, y_train)
+
+
+#clf = sklearn.svm.SVC(C=1, kernel='rbf')
+#clf.fit(x_train, y_train) #x_train_normalized/x_train
+y_predict = model.predict(x_test)#x_test_normalized/x_test
 
 #Evaluation
-accuracy = clf.score(x_test, y_test)#x_test_normalized/x_test
+accuracy = model.score(x_test, y_test)#x_test_normalized/x_test
 print("Accuracy:")
 print(accuracy)
 print(confusion_matrix(y_test, y_predict))
