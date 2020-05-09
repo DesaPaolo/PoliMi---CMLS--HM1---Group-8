@@ -1,29 +1,21 @@
 
-import IPython.display as ipd
-import store as store
-
-ipd.Audio('/Users/PilvioSol/Desktop/UrbanSound8K/audio/fold1/193698-2-0-114.wav')
-
-import IPython.display as ipd
-import librosa
 import librosa.display
-import matplotlib.pyplot as plt
-import numpy as np
-
-filename = '/Users/PilvioSol/Desktop/UrbanSound8K/audio/fold1/193698-2-0-114.wav'
-plt.figure(figsize=(12,4))
-data,sample_rate = librosa.load(filename)
-_ = librosa.display.waveplot(data,sr=sample_rate)
-ipd.Audio(filename)
-
-import pandas as pd
-metadata = pd.read_csv('/Users/PilvioSol/Desktop/UrbanSound8K/metadata/UrbanSound8K.csv')
-metadata.head()
-
 import pandas as pd
 import os
 import librosa
-import librosa.display
+import numpy as np
+import datetime
+import tensorflow as tf
+
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import to_categorical
+from keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation, Flatten
+from keras.layers import Convolution2D, MaxPooling2D
+from keras.optimizers import Adam
+from keras.utils import np_utils
+from sklearn import metrics
+from keras.callbacks import ModelCheckpoint
 
 
 def extract_features(file_name):
@@ -39,14 +31,11 @@ def extract_features(file_name):
     return mfccsscaled
 
 
-import pandas as pd
-import os
-import librosa
 
 # Set the path to the full UrbanSound dataset
-fulldatasetpath = '/Users/PilvioSol/Desktop/UrbanSound8K/audio/'
+fulldatasetpath = '/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/audio/'
 
-metadata = pd.read_csv('/Users/PilvioSol/Desktop/UrbanSound8K/metadata/UrbanSound8K.csv')
+metadata = pd.read_csv('/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/metadata/UrbanSound8K.csv')
 
 features = []
 
@@ -65,8 +54,6 @@ featuresdf = pd.DataFrame(features, columns=['feature', 'class_label'])
 
 print('Finished feature extraction from ', len(featuresdf), ' files')
 
-from sklearn.preprocessing import LabelEncoder
-from keras.utils import to_categorical
 
 # Convert features and corresponding classification labels into numpy arrays
 X = np.array(featuresdf.feature.tolist())
@@ -81,13 +68,6 @@ from sklearn.model_selection import train_test_split
 
 x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.2, random_state = 42)
 
-import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Convolution2D, MaxPooling2D
-from keras.optimizers import Adam
-from keras.utils import np_utils
-from sklearn import metrics
 
 num_labels = yy.shape[1]
 filter_size = 2
@@ -109,7 +89,6 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
 
-
 # Display model architecture summary
 model.summary()
 
@@ -119,8 +98,6 @@ accuracy = 100*score[1]
 
 print("Pre-training accuracy: %.4f%%" % accuracy)
 
-from keras.callbacks import ModelCheckpoint
-from datetime import datetime
 
 num_epochs = 100
 num_batch_size = 32
