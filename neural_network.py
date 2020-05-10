@@ -8,8 +8,8 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 
 # LOAD FEATURE VECTOR FROM .CSV FILES
 path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Feature coeff csv/"
-x_train = np.genfromtxt(path + '1-6,8-10folds_mfcc_n_coeff=40_x_train.csv', delimiter=',')
-x_test = np.genfromtxt(path + 'fold7_mfcc_n_coeff=40_x_test.csv', delimiter=',')
+x_train = np.genfromtxt(path + '1-6,8-10folds_mfcc_n_coeff=13_x_train.csv', delimiter=',')
+x_test = np.genfromtxt(path + 'fold7_mfcc_n_coeff=13_x_test.csv', delimiter=',')
 y_train = np.genfromtxt(path + '1-6,8-10folds_y_train.csv', delimiter=',')
 y_test = np.genfromtxt(path + 'fold7_y_test.csv', delimiter=',')
 
@@ -17,7 +17,7 @@ num_labels = 10
 
 model = Sequential()
 
-model.add(Dense(256, input_shape=(40,)))
+model.add(Dense(256, input_shape=(13,)))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 
@@ -42,12 +42,8 @@ print("Pre-training accuracy: %.4f%%" % accuracy)
 num_epochs = 100
 num_batch_size = 32
 
-start = datetime.now()
 
 model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test),  verbose=1)
-
-duration = datetime.now() - start
-print("Training completed in time: ", duration)
 
 
 # Evaluating the model on the training and testing set

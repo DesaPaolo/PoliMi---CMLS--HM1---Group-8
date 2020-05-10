@@ -21,7 +21,7 @@ from keras.callbacks import ModelCheckpoint
 def extract_features(file_name):
     try:
         audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
-        mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+        mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=13)
         mfccsscaled = np.mean(mfccs.T, axis=0)
 
     except Exception as e:
@@ -33,9 +33,9 @@ def extract_features(file_name):
 
 
 # Set the path to the full UrbanSound dataset
-fulldatasetpath = '/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/audio/'
+fulldatasetpath = 'C:/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/audio/'
 
-metadata = pd.read_csv('/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/metadata/UrbanSound8K.csv')
+metadata = pd.read_csv('C:/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K/metadata/UrbanSound8K.csv')
 
 features = []
 
@@ -68,14 +68,15 @@ from sklearn.model_selection import train_test_split
 
 x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.2, random_state = 42)
 
-
+print(yy.shape)
 num_labels = yy.shape[1]
+print(num_labels)
 filter_size = 2
 
 # Construct model
 model = Sequential()
 
-model.add(Dense(256, input_shape=(40,)))
+model.add(Dense(256, input_shape=(13,)))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 
@@ -102,15 +103,8 @@ print("Pre-training accuracy: %.4f%%" % accuracy)
 num_epochs = 100
 num_batch_size = 32
 
-#checkpointer = ModelCheckpoint(filepath='saved_models/weights.best.basic_mlp.hdf5',
-                               #verbose=1, save_best_only=True)
-start = datetime.now()
 
 model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test),  verbose=1)
-
-
-duration = datetime.now() - start
-print("Training completed in time: ", duration)
 
 
 # Evaluating the model on the training and testing set
