@@ -86,7 +86,7 @@ def parse_audio(x):
     return x.flatten('F')[:x.shape[0]]
 
 
-test_fold = '7'
+test_fold = '5'
 num_coeff = 40
 
 for i in tqdm(range(len(df))):
@@ -176,12 +176,12 @@ y_test = np.array(y_test)
 
 # LOAD FEATURE VECTORS IN .CSV FILES
 
-path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Feature coeff csv/" # /Users/PilvioSol/Desktop/PROVA0305/
+path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Tests/Test fold 5/" # /Users/PilvioSol/Desktop/PROVA0305/
 
-np.savetxt(path + '1-6,8-10folds_mfcc_n_coeff=40_x_train.csv', x_train, delimiter=',')
-np.savetxt(path + 'fold7_mfcc_n_coeff=40_x_test.csv', x_test, delimiter=',')
-np.savetxt(path + '1-6,8-10folds_y_train.csv', y_train, delimiter=',')
-np.savetxt(path + 'fold7_y_test.csv', y_test, delimiter=',')
+np.savetxt(path + 'x_train.csv', x_train, delimiter=',')
+np.savetxt(path + 'x_test.csv', x_test, delimiter=',')
+np.savetxt(path + 'y_train.csv', y_train, delimiter=',')
+np.savetxt(path + 'y_test.csv', y_test, delimiter=',')
 
 # np.savetxt(path + '10_x_train0.csv', x_train0, delimiter=',')
 # np.savetxt(path + '10_x_test0.csv', x_test0, delimiter=',')

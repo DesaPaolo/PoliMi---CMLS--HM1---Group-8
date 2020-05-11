@@ -7,17 +7,17 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 
 
 # LOAD FEATURE VECTOR FROM .CSV FILES
-path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Feature coeff csv/"
-x_train = np.genfromtxt(path + '1-6,8-10folds_mfcc_n_coeff=13_x_train.csv', delimiter=',')
-x_test = np.genfromtxt(path + 'fold7_mfcc_n_coeff=13_x_test.csv', delimiter=',')
-y_train = np.genfromtxt(path + '1-6,8-10folds_y_train.csv', delimiter=',')
-y_test = np.genfromtxt(path + 'fold7_y_test.csv', delimiter=',')
+path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Tests/Test fold 10/"
+x_train = np.genfromtxt(path + 'x_train.csv', delimiter=',')
+x_test = np.genfromtxt(path + 'x_test.csv', delimiter=',')
+y_train = np.genfromtxt(path + 'y_train.csv', delimiter=',')
+y_test = np.genfromtxt(path + 'y_test.csv', delimiter=',')
 
 num_labels = 10
 
 model = Sequential()
 
-model.add(Dense(256, input_shape=(13,)))
+model.add(Dense(256, input_shape=(40,)))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 
