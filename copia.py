@@ -1,4 +1,3 @@
-
 import librosa.display
 import pandas as pd
 import os
@@ -21,7 +20,7 @@ from keras.callbacks import ModelCheckpoint
 def extract_features(file_name):
     try:
         audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
-        mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=13)
+        mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
         mfccsscaled = np.mean(mfccs.T, axis=0)
 
     except Exception as e:
@@ -29,7 +28,6 @@ def extract_features(file_name):
         return None
 
     return mfccsscaled
-
 
 
 # Set the path to the full UrbanSound dataset
@@ -54,7 +52,6 @@ featuresdf = pd.DataFrame(features, columns=['feature', 'class_label'])
 
 print('Finished feature extraction from ', len(featuresdf), ' files')
 
-
 # Convert features and corresponding classification labels into numpy arrays
 X = np.array(featuresdf.feature.tolist())
 y = np.array(featuresdf.class_label.tolist())
@@ -66,17 +63,25 @@ yy = to_categorical(le.fit_transform(y))
 # split the dataset
 from sklearn.model_selection import train_test_split
 
-x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.2, random_state = 42)
+x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.1, random_state=42)
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
 
-print(yy.shape)
+# y_test_np = np.array(y_test)
+# path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Tests/"
+#
+# np.savetxt(path + 'y_test_CNN.csv', y_test_np, delimiter=',')
+
+
 num_labels = yy.shape[1]
-print(num_labels)
 filter_size = 2
 
 # Construct model
 model = Sequential()
 
-model.add(Dense(256, input_shape=(13,)))
+model.add(Dense(256, input_shape=(40,)))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 
@@ -89,23 +94,19 @@ model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
-
 # Display model architecture summary
 model.summary()
 
 # Calculate pre-training accuracy
 score = model.evaluate(x_test, y_test, verbose=0)
-accuracy = 100*score[1]
+accuracy = 100 * score[1]
 
 print("Pre-training accuracy: %.4f%%" % accuracy)
-
 
 num_epochs = 100
 num_batch_size = 32
 
-
-model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test),  verbose=1)
-
+model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test), verbose=1)
 
 # Evaluating the model on the training and testing set
 score = model.evaluate(x_train, y_train, verbose=0)

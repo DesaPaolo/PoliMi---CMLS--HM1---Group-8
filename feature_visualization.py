@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import librosa
 import matplotlib.pyplot as plt
-from playsound import playsound
+# from playsound import playsound
 
 from tqdm import tqdm
 
@@ -27,12 +27,12 @@ d1f = pd.DataFrame(data_1fold)
 # FEATURE EXTRACTION
 
 # Number of file for each class in fold
-# print(d1f["classID"].value_counts())
+print(d1f["classID"].value_counts())
 n_samples_for_classes = d1f["classID"].value_counts()
 
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 dict_train_features = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
-n_coeff = 13
+n_coeff = 40
 
 for c in classes:
     n_train_samples = n_samples_for_classes[int(c)]
@@ -73,7 +73,7 @@ for c in classes:
     plt.imshow(feature, origin='lower', aspect='auto')
     plt.xlabel('Training samples')
     plt.ylabel('MFCC coefficients')
-    plt.title('MFCC (13 coefficients) for class {}'.format(c))
+    plt.title('MFCC (40 coefficients) for class {}'.format(c))
     plt.colorbar()
     plt.tight_layout()
 
