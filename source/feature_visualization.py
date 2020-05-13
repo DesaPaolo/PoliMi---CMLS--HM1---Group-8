@@ -2,9 +2,8 @@ import pandas as pd
 import numpy as np
 import librosa
 import matplotlib.pyplot as plt
-# from playsound import playsound
-
 from tqdm import tqdm
+# from playsound import playsound
 
 # DATA COLLECTION
 
@@ -65,7 +64,7 @@ for c in classes:
 
     dict_train_features[c] = train_features
 
-#VISUALIZATION
+# VISUALIZATION
 
 for c in classes:
     feature = dict_train_features[c].transpose()
