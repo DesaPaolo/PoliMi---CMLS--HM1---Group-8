@@ -60,53 +60,54 @@ y = np.array(featuresdf.class_label.tolist())
 le = LabelEncoder()
 yy = to_categorical(le.fit_transform(y))
 
-# split the dataset
+for i in range(4): #10 accuracies
 
-x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.1, random_state=42)
+    # split the dataset
 
+    x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.1, random_state=42)
 
-# y_test_np = np.array(y_test)
-# path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Tests/"
-#
-# np.savetxt(path + 'y_test_CNN.csv', y_test_np, delimiter=',')
+    # y_test_np = np.array(y_test)
+    # path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/Tests/"
+    #
+    # np.savetxt(path + 'y_test_CNN.csv', y_test_np, delimiter=',')
 
+    num_labels = yy.shape[1]
+    filter_size = 2
 
-num_labels = yy.shape[1]
-filter_size = 2
+    # Construct model
+    model = Sequential()
 
-# Construct model
-model = Sequential()
+    model.add(Dense(256, input_shape=(40,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
 
-model.add(Dense(256, input_shape=(40,)))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
 
-model.add(Dense(256))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
+    model.add(Dense(num_labels))
+    model.add(Activation('softmax'))
 
-model.add(Dense(num_labels))
-model.add(Activation('softmax'))
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+    # Display model architecture summary
+    model.summary()
 
-# Display model architecture summary
-model.summary()
+    # Calculate pre-training accuracy
+    score = model.evaluate(x_test, y_test, verbose=0)
+    accuracy = 100 * score[1]
 
-# Calculate pre-training accuracy
-score = model.evaluate(x_test, y_test, verbose=0)
-accuracy = 100 * score[1]
+    print("Pre-training accuracy: %.4f%%" % accuracy)
 
-print("Pre-training accuracy: %.4f%%" % accuracy)
+    num_epochs = 100
+    num_batch_size = 32
 
-num_epochs = 100
-num_batch_size = 32
+    model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test),
+              verbose=1)
 
-model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test), verbose=1)
+    # Evaluating the model on the training and testing set
+    score = model.evaluate(x_train, y_train, verbose=0)
+    print("Training Accuracy: ", score[1])
 
-# Evaluating the model on the training and testing set
-score = model.evaluate(x_train, y_train, verbose=0)
-print("Training Accuracy: ", score[1])
-
-score = model.evaluate(x_test, y_test, verbose=0)
-print("Testing Accuracy: ", score[1])
+    score = model.evaluate(x_test, y_test, verbose=0)
+    print("Testing Accuracy: ", score[1])
