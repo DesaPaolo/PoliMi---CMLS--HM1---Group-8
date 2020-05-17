@@ -6,8 +6,8 @@ path = "C:/Users/Paolo De Santis/Desktop/Repository - CMLS - HM1/Pdf & Results/"
 
 SVC_accuracies = np.genfromtxt(path + 'SVC_accuracies.csv', delimiter=',', dtype=float)
 KNN_accuracies = np.genfromtxt(path + 'KNN_accuracies.csv', delimiter=',', dtype=float)
-CNN_training_accuracies = np.genfromtxt(path + 'CNN_training_accuracies.csv', delimiter=',', dtype=float)
-CNN_testing_accuracies = np.genfromtxt(path + 'CNN_testing_accuracies.csv', delimiter=',', dtype=float)
+CNN_accuracies_cv_unshuffled = np.genfromtxt(path + 'CNN cross_validation_dataset_unshuffled.csv', delimiter=',', dtype=float)
+CNN_accuracies_cv_shuffled = np.genfromtxt(path + 'CNN cross_validation_dataset_shuffled.csv', delimiter=',', dtype=float)
 SVC_conf_mat = np.genfromtxt(path + 'SVC_conf_mat.csv', delimiter=',', dtype=float)
 KNN_conf_mat = np.genfromtxt(path + 'KNN_conf_mat.csv', delimiter=',', dtype=float)
 
@@ -21,10 +21,10 @@ ax1.set_title('SVC 10-Cross-Validation Accuracies Boxplot')
 ax1.boxplot(SVC_accuracies)
 ax2.set_title('KNN 10-Cross-Validation Accuracies Boxplot')
 ax2.boxplot(KNN_accuracies)
-ax3.set_title('CNN Training Accuracies Boxplot')
-ax3.boxplot(CNN_training_accuracies)
-ax4.set_title('CNN Testing Accuracies Boxplot')
-ax4.boxplot(CNN_testing_accuracies)
+ax3.set_title('CNN Accuracies Dataset Unshuffled Boxplot')
+ax3.boxplot(CNN_accuracies_cv_unshuffled)
+ax4.set_title('CNN Accuracies Dataset Shuffled Boxplot')
+ax4.boxplot(CNN_accuracies_cv_shuffled)
 
 plt.show()
 

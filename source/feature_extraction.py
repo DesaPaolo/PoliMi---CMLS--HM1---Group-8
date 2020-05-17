@@ -7,7 +7,7 @@ from scipy.signal import butter, lfilter, freqz
 # DATA COLLECTION
 
 # path of UrbanSound8K 10 folds
-path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K"  # /Users/PilvioSol/Desktop/UrbanSound8K
+path = "C:/Users/Paolo De Santis/Desktop/UrbanSound/UrbanSound8K"
 
 # Read metadata file
 df = pd.read_csv(path + "/metadata/UrbanSound8K.csv")
@@ -52,7 +52,7 @@ num_coeff = 40
 
 def extract_features(file_name):
     try:
-        audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
+        audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast', mono=true)
         mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=num_coeff)
         mfccsscaled = np.mean(mfccs.T, axis=0)
 

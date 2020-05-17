@@ -21,13 +21,13 @@ for i in tqdm(range(len(data))):
     if fold_no == '10':
         data_1fold.append(data.iloc[i])
 
-d1f = pd.DataFrame(data_1fold)
+data = pd.DataFrame(data_1fold)
 
 # FEATURE EXTRACTION
 
 # Number of file for each class in fold
-print(d1f["classID"].value_counts())
-n_samples_for_classes = d1f["classID"].value_counts()
+print(data["classID"].value_counts())
+n_samples_for_classes = data["classID"].value_counts()
 
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 dict_train_features = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': []}
@@ -38,12 +38,12 @@ for c in classes:
     train_features = np.zeros((n_train_samples, n_coeff))
     j = 0
 
-    for i in tqdm(range(len(d1f))):
-        label = d1f.iloc[i]["classID"]
+    for i in tqdm(range(len(data))):
+        label = data.iloc[i]["classID"]
 
         if str(label) == c:
-            fold_no = str(d1f.iloc[i]["fold"])
-            file = d1f.iloc[i]["slice_file_name"]
+            fold_no = str(data.iloc[i]["fold"])
+            file = data.iloc[i]["slice_file_name"]
             filename = path + "UrbanSound8K/audio/fold" + fold_no + "/" + file
             y, sr = librosa.load(filename, mono=True)  # convert to mono
 
@@ -71,8 +71,8 @@ for c in classes:
     fig = plt.figure(figsize=(16, 6))
     plt.imshow(feature, origin='lower', aspect='auto')
     plt.xlabel('Training samples')
-    plt.ylabel('MFCC coefficients')
-    plt.title('MFCC (40 coefficients) for class {}'.format(c))
+    plt.ylabel('Chromagram coefficients')
+    plt.title('Chromagram (40 coefficients) for class {}'.format(c))
     plt.colorbar()
     plt.tight_layout()
 

@@ -3,10 +3,13 @@ import pandas as pd
 import os
 import librosa
 import numpy as np
+import random
 import tensorflow as tf
 
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import cross_val_score
+from sklearn.datasets import make_classification
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
@@ -56,52 +59,58 @@ print('Finished feature extraction from ', len(featuresdf), ' files')
 X = np.array(featuresdf.feature.tolist())
 y = np.array(featuresdf.class_label.tolist())
 
+# Shuffle the entire vectors in the same way
+def shuffle_in_unison(a, b):
+    assert len(a) == len(b)
+    shuffled_a = np.empty(a.shape, dtype=a.dtype)
+    shuffled_b = np.empty(b.shape, dtype=b.dtype)
+    permutation = np.random.permutation(len(a))
+    for old_index, new_index in enumerate(permutation):
+        shuffled_a[new_index] = a[old_index]
+        shuffled_b[new_index] = b[old_index]
+    return shuffled_a, shuffled_b
+
+
+X_shuffled , y_shuffled = shuffle_in_unison(X,y)
+
 # Encode the classification labels
 le = LabelEncoder()
-yy = to_categorical(le.fit_transform(y))
-
-
-# split the dataset
-x_train, x_test, y_train, y_test = train_test_split(X, yy, test_size=0.1, random_state=42)
+yy = to_categorical(le.fit_transform(y_shuffled))
 
 
 num_labels = yy.shape[1]
 filter_size = 2
 
+
 # Construct model
-model = Sequential()
+def create_network():
+    model = Sequential()
 
-model.add(Dense(256, input_shape=(40,)))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
+    model.add(Dense(256, input_shape=(40,)))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
 
-model.add(Dense(256))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
+    model.add(Dense(256))
+    model.add(Activation('relu'))
+    model.add(Dropout(0.5))
 
-model.add(Dense(num_labels))
-model.add(Activation('softmax'))
+    model.add(Dense(num_labels))
+    model.add(Activation('softmax'))
 
-model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
+    model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer='adam')
 
-# Display model architecture summary
-model.summary()
+    return model
 
-# Calculate pre-training accuracy
-score = model.evaluate(x_test, y_test, verbose=0)
-accuracy = 100 * score[1]
-
-print("Pre-training accuracy: %.4f%%" % accuracy)
 
 num_epochs = 100
 num_batch_size = 32
 
-model.fit(x_train, y_train, batch_size=num_batch_size, epochs=num_epochs, validation_data=(x_test, y_test),
-          verbose=1)
 
-# Evaluating the model on the training and testing set
-score = model.evaluate(x_train, y_train, verbose=0)
-print("Training Accuracy: ", score[1])
+# K-FOLD CROSS VALIDATION
 
-score = model.evaluate(x_test, y_test, verbose=0)
-print("Testing Accuracy: ", score[1])
+neural_network = KerasClassifier(build_fn=create_network,
+                                 epochs=num_epochs,
+                                 batch_size=num_batch_size,
+                                 verbose=0)
+
+print(cross_val_score(neural_network, X=X_shuffled, y=yy, cv=10, n_jobs=-1))
